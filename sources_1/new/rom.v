@@ -89,12 +89,17 @@ module rom(
 //         ROM[3] = 8'b00010000;   // 1
         
         
-        ROM[0] = 8'b01110100;   //mov imm to acc
-        ROM[1] = 8'b11000000;   //tr0   c0
-        ROM[2] = 8'b11110101;   //Mov Acc to direct 08h
-        ROM[3] = 8'h08;
+//        ROM[0] = 8'b01110100;   //mov imm to acc
+//        ROM[1] = 8'b11000000;   //tr0   c0
+//        ROM[2] = 8'b11110101;   //Mov Acc to direct 08h
+//        ROM[3] = 8'h08;
         
-        
+       ROM[0] = 8'b01110100;   //mov imm to acc
+       ROM[1] = 8'h02;
+        ROM[11] = 8'b00100100;   //add  acc to imm
+        ROM[12] = 8'b00000001;         //TMOD 0
+        ROM[13] = 8'b00110010;   //RETI
+        ROM[14] = 8'h01;         //TMOD 0
         
         
         

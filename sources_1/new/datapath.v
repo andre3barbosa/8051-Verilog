@@ -36,13 +36,21 @@ module datapath(
     input pc_inc,
     input pc_inc_offset,
     input pc_set,
-    input dptr_load_high,
-    input dptr_load_low,   
     input ir_load_high,
     input ir_load_low,
     input acc_load,
     
-    input int_a,
+    input int,
+    input int_vec,
+    input pop_1_stack,
+    input pop_2_stack,
+    input [7:0]stack_out,
+    
+    output int_ack,
+    
+    output [7:0]stack_in,
+    output  push_1_stack,
+    output  push_2_stack,
     
     output [7:0] ram_rd_addr,       //ram address to read
     //output reg [7:0] ram_rd_addr,   //ram address to read
@@ -58,26 +66,25 @@ module datapath(
     //reg [7:0] ACC;
     wire [7:0] operand2_alu;
     wire [7:0] acc_out;
-    wire [15:0] dptr_out;
     reg [7:0] PSW;
     
     wire [8:0]ALU_result;
     
     wire [7:0]acc_in = (ram_rd_en_reg == 1'b1 || ram_rd_en_data == 1'b1) ? ram_rd_byte : ALU_result[7:0];
     
-    //program_counter pc(clock, reset, pc_inc, pc_set,IR[7:0], rom_addr);
+
     instruction_register ir(clock,reset,ir_load_high,ir_load_low,rom_byte,IR);
+    
     arithmetic_logic_unit alu(clock,reset,acc_out,IR[7:0],opcode[7:0],alu_en,ALU_result[8:0]);
+    
     register_8bit acc(clock, reset, acc_load, acc_in, acc_out);
   
-//    program_counter pc_dp(clock, reset,pc_inc, pc_inc_offset, pc_set, operand2_alu[7:0], dptr_out, acc_out, rom_addr);
-    program_counter pc_dp(clock, reset,pc_inc, pc_inc_offset, pc_set, operand2_alu[7:0], dptr_out, acc_out, int_a, rom_addr);
+
+    program_counter pc_dp(clock, reset, pc_inc, pc_inc_offset, operand2_alu[7:0], acc_out, int, int_vec, pop_1_stack, pop_2_stack, stack_out, int_ack, stack_in, push_1_stack, push_2_stack, rom_addr);
     
     
-    register_16bit dptr_dp(clock, reset, dptr_load_high, dptr_load_low, IR[7:0], dptr_out);  
     
-    
-   // interrupt_control ISR(clock, reset, int_r, int_a, rom_addr);
+  
     
     assign opcode = IR[15:8];
     

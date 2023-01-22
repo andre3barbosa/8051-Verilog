@@ -43,6 +43,7 @@ control_unit ctrl_unit(
     .clock(clock),
     .reset(reset),
     .opcode(opcode),
+    .int(int),
     .ram_rd_en_reg(ram_rd_en_reg),
     .ram_wr_en_reg(ram_wr_en_reg),
     .ram_reg_in_sel(ram_reg_in_sel),
@@ -53,12 +54,12 @@ control_unit ctrl_unit(
     .rom_en(rom_en),
     .pc_inc(pc_inc),
     .pc_inc_offset(pc_inc_offset),
-    .pc_set(pc_set),
-    .dptr_load_high(dptr_load_high),
-    .dptr_load_low(dptr_load_low),
     .ir_load_high(ir_load_high),
     .ir_load_low(ir_load_low),
-    .acc_load(acc_load)
+    .acc_load(acc_load),
+    .int_en(int_en),
+    .pop_1_stack(pop_1_stack),
+    .pop_2_stack(pop_2_stack)
 );
 
 datapath data_path(
@@ -76,13 +77,18 @@ datapath data_path(
     .data_vld(data_vld),
     .pc_inc(pc_inc),
     .pc_inc_offset(pc_inc_offset),
-    .pc_set(pc_set),
-    .dptr_load_high(dptr_load_high),
-    .dptr_load_low(dptr_load_low),
     .ir_load_high(ir_load_high),
     .ir_load_low(ir_load_low),
     .acc_load(acc_load),
-    .int_a(int_ack),
+    .int(int),
+    .int_vec(int_vec),
+    .pop_1_stack(pop_1_stack),
+    .pop_2_stack(pop_2_stack),
+    .stack_out(stack_out),
+    .int_ack(int_ack),
+    .stack_in(stack_in),
+    .push_1_stack(push_1_stack),
+    .push_2_stack(push_2_stack),
     .ram_rd_addr(ram_rd_addr),
     .ram_wr_addr(ram_wr_addr),
     .ram_wr_byte(ram_wr_byte),
@@ -103,7 +109,18 @@ ram ram(
     .ram_rd_addr(ram_rd_addr),
     .ram_wr_addr(ram_wr_addr),
     .ram_wr_byte(ram_wr_byte),
-    .ram_rd_byte(ram_rd_byte)
+    .ram_rd_byte(ram_rd_byte),
+    .enable_stack(enable_stack),
+    .stack_in(stack_in),
+    .push_1_stack(push_1_stack),
+    .push_2_stack(push_2_stack),
+    .pop_1_stack(pop_1_stack),
+    .pop_2_stack(pop_2_stack),
+    .stack_out(stack_out),
+    .stack_empty(stack_empty),
+    .stack_full(stack_full),
+    .int_pend(int_pend),
+    .int_req(int_req)
 );
 
 rom rom(
@@ -129,8 +146,13 @@ timer_8051 timer_8051(
 interrupt_control interrupt_control(
     .clock(clock),
     .reset(reset),
+    .int_en(int_en),
     .int_req(int_req),
-    .int_ack(int_ack)
+    .int_pend(int_pend),
+    .int_ack(int_ack),
+    .int(int),
+    .int_vec(int_vec)
+
 );
 
 

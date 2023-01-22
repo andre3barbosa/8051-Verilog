@@ -1,29 +1,11 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 11/08/2022 06:21:44 PM
-// Design Name: 
-// Module Name: control_unit
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
 
 module control_unit(
     input clock,
     input reset,
     input [7:0] opcode,
+    input int,
+    
     output ram_rd_en_reg,
     output ram_wr_en_reg,
     output [2:0] ram_reg_in_sel,
@@ -35,16 +17,19 @@ module control_unit(
     output pc_inc,
     output pc_inc_offset,
     output pc_set,
-    output dptr_load_high,
-    output dptr_load_low, 
     output ir_load_high,
     output ir_load_low,
-    output acc_load
+    output acc_load,
+    output int_en,
+    
+    output pop_1_stack,
+    output pop_2_stack
+    
     );
    
     `include "opcodes.v"
 
-    
+    assign int_en = (state == s_fetch_1 || state == s_fetch_2 || state == s_start ||state == s_decode || state == s_mov_ar || state == s_mov_ad) ? 1'b0 : 1'b1;
     reg [4:0] state;
     
     //=========== Internal Constants =====================
@@ -68,11 +53,10 @@ module control_unit(
               s_xrl_ri  = 5'b10000,
               s_jnz     = 5'b10001,
               s_jz      = 5'b10010,
-              s_jmp     = 5'b11000,
               s_sjmp    = 5'b10011,
               s_jnc     = 5'b10100,
-              s_mov_dha = 5'b11001,
-              s_mov_dla = 5'b11010,
+              s_reti1 = 5'b11001,   //first pop
+              s_reti2 = 5'b11010,   //second pop
               s_mov_ar_2 = 5'b11011,
               s_mov_ad   = 5'b11100,
               s_mov_da   = 5'b11101,
@@ -113,14 +97,11 @@ assign alu_en = (state == s_decode) ? 1'b1 : 1'b0;
 
 assign pc_inc_offset = (state == s_sjmp) ? 1'b1 : 1'b0;
 
+// stack
+assign pop_1_stack = (state == s_reti1) ? 1'b1 : 1'b0;
+assign pop_2_stack = (state == s_reti2) ? 1'b1 : 1'b0;
 
-//Assign the control signal of dptr load
-assign dptr_load_high = (state == s_mov_dha) ? 1'b1 : 1'b0;
-assign dptr_load_low = (state == s_mov_dla) ? 1'b1 : 1'b0;
-
-assign pc_set = (state == s_jmp) ? 1'b1 : 1'b0;
-
-always @ (posedge clock)                                //CU - start -fetch1-wait-fetch2-decode-execute
+always @ (posedge clock && ~int)                                //CU - start -fetch1-wait-fetch2-decode-execute
 begin : FSM
 	if (reset == 1'b1) begin // reset
 		state <=  s_start;   
@@ -140,10 +121,6 @@ begin : FSM
                 casex(opcode) 
 				    `MOV_RI:
 				        state <= s_mov_ri;
-				    `MOV_DLA:   //move value of A to dptr low
-				        state <= s_mov_dla;
-				    `MOV_DHA:   //move value of A to dptr high
-				        state <= s_mov_dha;
                     `SUBB_RI:
                         state <= s_subb_ri;
                     `ORL_RI:
@@ -178,8 +155,8 @@ begin : FSM
                         state <= s_jz;
                     `JNC:
                         state <= s_jnc;
-                    `JMP:
-                        state <= s_jmp;                    
+                    `RETI:
+                        state <= s_reti1;   
                     default : 
 			            state <= s_fetch_1;
                  endcase
@@ -217,8 +194,6 @@ begin : FSM
                 state <= s_fetch_1;
             s_jz:
                 state <= s_fetch_1;
-            s_jmp:
-                state <= s_fetch_1;
             s_sjmp:
                 state <= s_fetch_1;
             s_jnc:
@@ -226,7 +201,11 @@ begin : FSM
             s_mov_ar_2:
                 state <= s_fetch_1;
             s_mov_ad_2:
-                state <= s_fetch_1;         
+                state <= s_fetch_1;
+            s_reti1:
+                state <= s_reti2;
+            s_reti2:
+                state <= s_fetch_1;             
             default : 
 			    state <= s_start;
 		endcase
