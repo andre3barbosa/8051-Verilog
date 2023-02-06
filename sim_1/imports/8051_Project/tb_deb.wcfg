@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_mov_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_mov" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="2090868fs"></ZoomEndTime>
+      <Cursor1Time time="510867fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="139"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="7" />
+   <wave_markers>
+      <marker label="" time="655985000" />
+   </wave_markers>
+   <wvobject type="logic" fp_name="/tb_mov/clock">
+      <obj_property name="ElementShortName">clock</obj_property>
+      <obj_property name="ObjectShortName">clock</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_mov/reset">
+      <obj_property name="ElementShortName">reset</obj_property>
+      <obj_property name="ObjectShortName">reset</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_mov/int_en">
+      <obj_property name="ElementShortName">int_en</obj_property>
+      <obj_property name="ObjectShortName">int_en</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_mov/int_tf0">
+      <obj_property name="ElementShortName">int_tf0</obj_property>
+      <obj_property name="ObjectShortName">int_tf0</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_mov/int_ack">
+      <obj_property name="ElementShortName">int_ack</obj_property>
+      <obj_property name="ObjectShortName">int_ack</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/tb_mov/int">
+      <obj_property name="ElementShortName">int</obj_property>
+      <obj_property name="ObjectShortName">int</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/tb_mov/int_vec">
+      <obj_property name="ElementShortName">int_vec[7:0]</obj_property>
+      <obj_property name="ObjectShortName">int_vec[7:0]</obj_property>
+   </wvobject>
+</wave_config>
