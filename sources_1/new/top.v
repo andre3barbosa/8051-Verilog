@@ -1,11 +1,13 @@
 `timescale 1ns / 1ps
 
 module top(
-    input clock,
-    input reset,
-    input [7:0]P0,   //external interrupt pin input
-    output [7:0]P1  //io port in read mode
-    );
+
+input clock,
+input reset,
+input [7:0]P0,   //external interrupt pin input
+output [7:0]P1  //io port in read mode
+
+);
 
 wire [7:0] opcode; 
 wire [15:0] rom_addr;
