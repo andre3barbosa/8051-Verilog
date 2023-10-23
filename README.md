@@ -13,3 +13,7 @@ This github contains a 8051 design, the test code used to verify it and the phys
 1. Processor Design
 2. Hardware Description Language (HDL)
 3. Defining a Instruction Set Architecture (ISA) 
+
+##
+
+For more information see the doc folder which contains detailed project documentation.
